@@ -1,0 +1,213 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Electric Aircraft Energy AI Analysis</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #f4f6f8;
+    margin: 0;
+    padding: 40px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+}
+
+h1 {
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    color: #555;
+    margin-bottom: 30px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 14px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+}
+
+.card h3 {
+    margin-top: 0;
+}
+
+label {
+    font-size: 13px;
+    font-weight: 500;
+    margin-top: 12px;
+    display: block;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 4px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+}
+
+input:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+
+button {
+    margin-top: 18px;
+    width: 100%;
+    padding: 12px;
+    background: #111;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+button:hover {
+    background: #2563eb;
+}
+
+.result-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.result-box {
+    background: #f9fafb;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #eee;
+}
+
+.result-box strong {
+    font-size: 18px;
+    display: block;
+}
+
+.metric-title {
+    font-size: 12px;
+    color: #666;
+    margin-top: 4px;
+}
+
+.section-title {
+    margin-top: 30px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+img {
+    margin-top: 20px;
+    border-radius: 8px;
+    max-width: 100%;
+}
+
+@media (max-width: 900px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Electric Aircraft Energy AI Analysis</h1>
+<div class="subtitle">
+Cruise-only aerodynamic energy model with ML comparison and trade study analysis.
+</div>
+
+<div class="grid">
+
+<!-- INPUT CARD -->
+<div class="card">
+<h3>Mission Inputs</h3>
+
+<form method="post">
+
+<label>Aircraft Mass (kg)</label>
+<input name="mass" value="{{ values.mass }}">
+
+<label>Cruise Speed (m/s)</label>
+<input name="speed" value="{{ values.speed }}">
+
+<label>Mission Distance (miles)</label>
+<input name="distance" value="{{ values.distance }}">
+
+<label>Altitude (ft)</label>
+<input name="altitude" value="{{ values.altitude }}">
+
+<button type="submit">Run Analysis</button>
+
+</form>
+</div>
+
+<!-- RESULTS CARD -->
+<div class="card">
+
+{% if results %}
+
+<h3>Physics Model Output</h3>
+
+<div class="result-grid">
+    <div class="result-box">
+        <strong>{{ "%.2f"|format(results.power_w/1000) }} kW</strong>
+        <div class="metric-title">Power Required</div>
+    </div>
+
+    <div class="result-box">
+        <strong>{{ "%.2f"|format(results.energy_kwh) }} kWh</strong>
+        <div class="metric-title">Energy Required</div>
+    </div>
+</div>
+
+<div class="section-title">Machine Learning Model</div>
+
+<div class="result-grid">
+    <div class="result-box">
+        <strong>{{ "%.2f"|format(ml_prediction) }} kWh</strong>
+        <div class="metric-title">Predicted Energy</div>
+    </div>
+
+    <div class="result-box">
+        <strong>{{ "%.2f"|format(ml_error) }} kWh</strong>
+        <div class="metric-title">Absolute Error</div>
+    </div>
+</div>
+
+<div class="section-title">Trade Study</div>
+
+{% if plot_url %}
+<img src="data:image/png;base64,{{ plot_url }}">
+{% endif %}
+
+{% else %}
+
+<p>Enter mission parameters and click <strong>Run Analysis</strong>.</p>
+
+{% endif %}
+
+</div>
+</div>
+
+</div>
+
+</body>
+</html>
